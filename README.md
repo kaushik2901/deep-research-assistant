@@ -1,0 +1,18 @@
+- Agent loop for query clarification (Goal is to have non-ambiguous query without frustrating user)
+    - User inputs
+    - Use check_for_ambiguous_query tool to find ambiguity
+    - Use generate_clarification_questions tool to generate questions for user
+    - Ask user those questions
+- Agent loop for research (Goal is to collect enough data from different sites to generate final report)
+    - Use search_planner (reasoning) tool to generate a search plan array
+    - Use google_search tool in parallel for each item in search plan
+    - Use search_planner (reasoning) tool (again but with search data) to find more search plan array (only if required)
+    - Use google_search tool in parallel for each item in new search plan
+- Agent loop for report generation (Goal is to generate error free and rich document which user can trust)
+    - Use report_generator tool to generate reports in LATEX / MARKDOWN
+    - Use code_interpreter tool to plot charts
+    - Use citation_generator tool to generate citation
+    - Use report_evaluator tool to get feedback for report
+    - Use report_generator tool to update report based on feedback from the evaluator
+    - Use grammar_evaluator tool to get grammatical feedback for report
+    - Use report_generator tool to update report based on feedback from the evaluator
