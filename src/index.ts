@@ -11,6 +11,10 @@ import { printGreen, printYellow } from "./utils/print.util";
 import runSearchPlanner from "./modules/search-planner.module";
 import runSearchExecutor from "./modules/search-executor.module";
 import rebuildAmbiguousQuery from "./utils/rebuild-ambiguous-query.util";
+import runTableOfContentGenerator from "./modules/table-of-content-generator.module";
+import runReferencesGenerator from "./modules/references-generator.module";
+import runReportSectionsGenerator from "./modules/report-sections-generator.module";
+import runReportGenerator from "./modules/report-generator.module";
 
 config();
 
@@ -86,11 +90,19 @@ async function main() {
   console.log(chalk.gray(`  Research data ready for synthesis`));
 
   console.log(chalk.green("\n✔ Research process completed successfully!"));
-  console.log(
-    chalk.yellow(
-      "Next steps: Implement the report generation agent to synthesize these results."
-    )
+
+  const documentOutline = await runTableOfContentGenerator(
+    context.searchResults
   );
+
+  const sections = await runReportSectionsGenerator(
+    documentOutline.tableOfContents,
+    context.searchResults
+  );
+
+  const references = await runReferencesGenerator(context.searchResults);
+
+  await runReportGenerator(documentOutline, sections, references);
 }
 
 main().catch((err) => {
