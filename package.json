@@ -1,6 +1,26 @@
 {
   "name": "deep-research-agent",
   "version": "1.0.0",
+  "description": "An intelligent research agent with ambiguity detection and clarification capabilities that automates comprehensive deep research workflows",
+  "keywords": [
+    "ai",
+    "research",
+    "agent",
+    "openai",
+    "automation",
+    "query-processing",
+    "information-retrieval"
+  ],
+  "homepage": "https://github.com/your-username/deep-research-agent#readme",
+  "bugs": {
+    "url": "https://github.com/your-username/deep-research-agent/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/deep-research-agent.git"
+  },
+  "license": "MIT",
+  "author": "Your Name <your.email@example.com>",
   "main": "dist/index.js",
   "bin": {
     "deep-research": "dist/index.js"
@@ -8,13 +28,11 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "set NODE_OPTIONS=\"--no-warnings=ExperimentalWarning\" && ts-node src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "prebuild": "npm run clean",
+    "postbuild": "echo Build completed successfully"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "module": "CommonJS",
-  "description": "An intelligent research agent with ambiguity detection and clarification capabilities",
   "dependencies": {
     "@openai/agents": "^0.0.7",
     "chalk": "^5.6.0",
@@ -26,7 +44,16 @@
   "devDependencies": {
     "@types/inquirer": "^9.0.9",
     "@types/node": "^24.0.1",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
-  }
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ]
 }
