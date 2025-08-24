@@ -8,6 +8,18 @@ import searchExecutorAgent from "./agents/search-executor.agent";
 
 config();
 
+interface Search {
+  query: string;
+  reason: string;
+}
+
+interface Context {
+  query: string;
+  iterationCount: number;
+  searches: Search[];
+  searchResults: string[];
+}
+
 const MAX_CLARIFICATION_ITERATION = 2;
 
 const rl = readline.createInterface({
@@ -20,13 +32,14 @@ function ask(prompt: string): Promise<string> {
 }
 
 async function main() {
-  const context = {
+  const context: Context = {
     query: "",
     iterationCount: 0,
+    searches: [],
+    searchResults: [],
   };
 
-  const userInput = await ask("Enter your research query");
-  context.query = userInput;
+  context.query = await ask("Enter your research query");
 
   while (true) {
     console.log("Query generation started..");
@@ -71,18 +84,19 @@ async function main() {
   console.log("Search planning started...");
 
   const spResponse = await run(searchPlanner, context.query);
-  const searches = spResponse.finalOutput?.searches ?? [];
+  context.searches = spResponse.finalOutput?.searches ?? [];
 
   console.log("Search planning completed");
 
   const seResponses = await Promise.all(
-    searches.map((search) => run(searchExecutorAgent, JSON.stringify(search)))
+    context.searches.map((search) =>
+      run(searchExecutorAgent, JSON.stringify(search))
+    )
   );
-  const searchResults = seResponses
+  
+  context.searchResults = seResponses
     .map((x) => x.finalOutput ?? "")
     .filter((x) => !!x);
-
-  console.log(searchResults);
 
   rl.close();
 }
