@@ -1,5 +1,6 @@
-import { Agent, webSearchTool } from "@openai/agents";
+import { Agent } from "@openai/agents";
 import z from "zod";
+import webSearchTool from "../tools/web-search.tool";
 
 const MAX_SEARCHES = 5;
 
@@ -71,7 +72,7 @@ const outputType = z.object({
     .describe(`Strategic array of ${MAX_SEARCHES} complementary search queries designed to gather comprehensive, diverse data covering all key aspects of the research topic without overlap`),
 });
 
-const tools = [webSearchTool({ searchContextSize: "low" })];
+const tools = [webSearchTool];
 
 export default Agent.create({
   name: "SearchPlanner",

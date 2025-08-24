@@ -1,4 +1,5 @@
-import { Agent, webSearchTool } from "@openai/agents";
+import { Agent } from "@openai/agents";
+import webSearchTool from "../tools/web-search.tool";
 
 const instructions = `
 You are a Search Executor Agent. Your role is to execute a single search query and extract the most relevant, factual information for research synthesis.
@@ -53,7 +54,7 @@ IMPORTANT INFORMATION: This should be important factors when doing search.
 - Today's date is ${new Date().toISOString()}. 
 `;
 
-const tools = [webSearchTool({ searchContextSize: "low" })];
+const tools = [webSearchTool];
 
 export default Agent.create({
   name: "SearchExecutor",
