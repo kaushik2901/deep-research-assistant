@@ -13,10 +13,10 @@ export default async function runAmbiguityDetector(
   }).start();
 
   try {
-    const adResponse = await run(ambiguousQueryDetectorAgent, query);
+    const response = await run(ambiguousQueryDetectorAgent, query);
     spinner.succeed(chalk.green("Ambiguity detection completed"));
     return (
-      adResponse.finalOutput ?? {
+      response.finalOutput ?? {
         isAmbiguousQuery: false,
         ambiguityReason: "",
         confidence: 0,

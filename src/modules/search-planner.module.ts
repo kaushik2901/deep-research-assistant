@@ -13,8 +13,8 @@ export default async function runSearchPlanner(
   }).start();
 
   try {
-    const spResponse = await run(searchPlannerAgent, query);
-    const searches = spResponse.finalOutput?.searches ?? [];
+    const response = await run(searchPlannerAgent, query);
+    const searches = response.finalOutput?.searches ?? [];
     spinner.succeed(
       chalk.green(
         `Research plan created with ${searches.length} search strategies`

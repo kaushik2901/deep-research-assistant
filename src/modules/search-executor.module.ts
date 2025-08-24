@@ -13,11 +13,11 @@ export default async function runSearchExecutor(
   }).start();
 
   try {
-    const seResponses = await Promise.all(
+    const response = await Promise.all(
       searches.map((search) => run(searchExecutorAgent, JSON.stringify(search)))
     );
 
-    const searchResults = seResponses
+    const searchResults = response
       .map((x) => x.finalOutput ?? "")
       .filter((x) => !!x);
 

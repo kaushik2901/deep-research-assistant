@@ -10,9 +10,9 @@ export default async function runQueryBuilder(query: string): Promise<string> {
   }).start();
 
   try {
-    const qbResponse = await run(queryBuilderAgent, query);
+    const response = await run(queryBuilderAgent, query);
     spinner.succeed(chalk.green("Query built successfully"));
-    return qbResponse.finalOutput ?? "";
+    return response.finalOutput ?? "";
   } catch (error) {
     spinner.fail(chalk.red("Failed to build query"));
     throw error;
