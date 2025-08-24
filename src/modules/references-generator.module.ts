@@ -17,7 +17,7 @@ export default async function runReferencesGenerator(
       referencesGeneratorAgent,
       JSON.stringify(searchResults)
     );
-    spinner.succeed(chalk.green("references generated successfully"));
+    spinner.succeed(chalk.green("References generated successfully"));
     return response.finalOutput?.references ?? [];
   } catch (error) {
     spinner.fail(chalk.red("Failed to generate references"));
