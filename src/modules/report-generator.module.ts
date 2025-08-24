@@ -1,4 +1,5 @@
 import * as fs from "fs/promises";
+import * as path from "path";
 import chalk from "chalk";
 import ora from "ora";
 import TableOfContent from "../types/table-of-content.type";
@@ -16,8 +17,9 @@ export default async function runReportGenerator(
   }).start();
 
   try {
+    const templatePath = path.resolve(__dirname, "../templates/report-template.html");
     const reportTemplate = (
-      await fs.readFile("./src/templates/report-template.html")
+      await fs.readFile(templatePath)
     ).toString();
 
     const tableOfContentTemplate = documentOutline.tableOfContents
@@ -39,7 +41,7 @@ export default async function runReportGenerator(
 
     await fs.writeFile("./report.html", report);
 
-    spinner.succeed(chalk.green("Report successfully"));
+    spinner.succeed(chalk.green("Report generated successfully"));
   } catch (error) {
     spinner.fail(chalk.red("Failed to generate report"));
     throw error;
