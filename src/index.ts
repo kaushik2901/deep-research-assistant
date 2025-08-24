@@ -15,6 +15,7 @@ import runTableOfContentGenerator from "./modules/table-of-content-generator.mod
 import runReferencesGenerator from "./modules/references-generator.module";
 import runReportSectionsGenerator from "./modules/report-sections-generator.module";
 import runReportGenerator from "./modules/report-generator.module";
+import logSymbols from "log-symbols";
 
 config();
 
@@ -40,14 +41,14 @@ async function main() {
 
       if (!ambiguity.isAmbiguousQuery) {
         printGreen(
-          "✔ Query is clear and unambiguous. Proceeding to research..."
+          `${logSymbols.success} Query is clear and unambiguous. Proceeding to research...`
         );
         break;
       }
 
       if (context.clarificationIterationCount >= MAX_CLARIFICATION_ITERATION) {
         printYellow(
-          "⚠️  Maximum clarification iterations reached. Proceeding with current query..."
+          `${logSymbols.warning} Maximum clarification iterations reached. Proceeding with current query...`
         );
         break;
       }
@@ -65,7 +66,7 @@ async function main() {
       context.clarificationIterationCount++;
 
       printGreen(
-        `\n✔ Clarification round ${context.clarificationIterationCount} completed. Refining query...\n`
+        `\n${logSymbols.success} Clarification round ${context.clarificationIterationCount} completed. Refining query...\n`
       );
     } catch (error) {
       throw error;
@@ -89,7 +90,11 @@ async function main() {
   );
   console.log(chalk.gray(`  Research data ready for synthesis`));
 
-  console.log(chalk.green("\n✔ Research process completed successfully!"));
+  console.log(
+    chalk.green(
+      `\n${logSymbols.success} Research process completed successfully!`
+    )
+  );
 
   const documentOutline = await runTableOfContentGenerator(
     context.searchResults
