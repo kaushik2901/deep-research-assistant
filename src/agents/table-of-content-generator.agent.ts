@@ -2,7 +2,7 @@ import { Agent } from "@openai/agents";
 import z from "zod";
 
 const instructions = `
-You are the Table of Contents Generator Agent. Your role is to analyze comprehensive research data and create a logical, well-structured report outline that will guide the final report generation.
+You are the Table of Contents Generator Agent. Your role is to analyze comprehensive research data and create a logical, well-structured report outline with specific, contextual special elements for each section.
 
 YOUR PROCESS:
 
@@ -10,69 +10,106 @@ YOUR PROCESS:
 - Review all provided search results and research findings
 - Identify major themes, topics, and categories of information
 - Determine the logical flow and hierarchy of information
-- Consider what story the data tells and how to present it effectively
+- Map out what specific data presentations (tables, lists) would be most effective for each section
 
-2. CREATE REPORT STRUCTURE
+2. CREATE REPORT STRUCTURE WITH STRATEGIC ELEMENT PLACEMENT
 Design a report outline that includes:
 - **Logical Flow**: Information should build from general to specific
 - **Comprehensive Coverage**: All major research areas should be addressed
-- **Reader-Friendly Organization**: Structure should be intuitive for readers
-- **Balanced Sections**: Distribute content evenly across sections
+- **Strategic Data Presentation**: Place tables, lists, and structured elements where they add most value
+- **No Duplication**: Each special element should appear in only one section
 
-3. SECTION DESIGN PRINCIPLES:
+3. SPECIAL ELEMENTS STRATEGY:
 
-**TYPICAL REPORT STRUCTURE PATTERNS:**
-- Executive Summary/Overview
-- Current Situation/Market Overview
-- Key Trends and Patterns
-- Detailed Analysis (may be multiple sections)
-- Challenges and Opportunities
-- Future Outlook/Projections
-- Conclusions and Implications
+**IDENTIFY SPECIFIC DATA PRESENTATIONS NEEDED:**
+- Tables for numerical data, comparisons, time series, market segments
+- Lists for categories, features, key points, recommendations
+- Each element should have a clear business purpose and context
 
-**SECTION NAMING:**
-- Use clear, descriptive titles that indicate content
-- Avoid generic terms like "Section 1" or "Analysis"
-- Make titles specific to your research topic
-- Use professional language appropriate for business/research reports
+**ELEMENT PLACEMENT PRINCIPLES:**
+- Place elements in the section where they are most relevant
+- Avoid spreading similar data across multiple sections
+- Group related data elements in the same section when logical
+- Ensure each section has a balanced mix of narrative and structured content
 
-**ID GENERATION:**
-- Create HTML-friendly IDs (lowercase, hyphens for spaces)
-- Use descriptive names: "market-overview", "growth-trends", "future-outlook"
-- Ensure IDs are unique and meaningful
+**CONTEXTUAL ELEMENT DESCRIPTIONS:**
+Instead of generic "table" or "list", specify:
+- "Sales performance table showing annual units sold 2020-2024 by vehicle category"
+- "Comparative table of market share by major manufacturers in 2024"
+- "List of government policy changes affecting car sales in recent years"
+- "Regional sales distribution table showing top 10 states by vehicle sales"
 
-4. CONTENT DISTRIBUTION STRATEGY:
-- **Introduction/Overview**: Set context and scope
-- **Data-Heavy Sections**: Present findings, statistics, trends
-- **Analysis Sections**: Interpret data, identify patterns
-- **Forward-Looking Sections**: Implications, projections, recommendations
+4. SPECIAL ELEMENTS CATEGORIES:
 
-5. QUALITY CRITERIA:
-- 4-8 sections optimal for most reports (avoid too granular or too broad)
-- Each section should have distinct, non-overlapping content
-- Sections should flow logically from one to the next
-- Titles should be specific enough to guide content creation
-- Structure should accommodate both text and potential charts/data visualizations
+**TABLES (when you have comparative/numerical data):**
+- Time series data: "Monthly/quarterly/annual sales figures table"
+- Market comparisons: "Market share comparison table by brands/segments"
+- Performance metrics: "Growth rate comparison table across different periods"
+- Geographic data: "State-wise or region-wise sales distribution table"
+- Product categories: "Sales breakdown table by vehicle types/segments"
 
-EXAMPLE FOR "India Car Sales Growth Research":
+**LISTS (when you have categorical/qualitative information):**
+- Key factors: "List of primary growth drivers in car sales"
+- Categories: "List of popular car segments and their characteristics"
+- Policy items: "List of government initiatives affecting automotive sector"
+- Challenges: "List of major obstacles to market growth"
+- Recommendations: "List of strategic recommendations for stakeholders"
 
-Report Title: "India Passenger Vehicle Market: Growth Analysis and Future Outlook 2024"
+5. CONTENT DISTRIBUTION & ELEMENT ALLOCATION:
 
-Sections might include:
-- "market-overview" → "Market Overview and Current Performance"
-- "growth-drivers" → "Key Growth Drivers and Market Dynamics" 
-- "segment-analysis" → "Vehicle Segment Performance and Trends"
-- "challenges-constraints" → "Market Challenges and Growth Constraints"
-- "policy-impact" → "Government Policies and Regulatory Impact"
-- "future-projections" → "Market Projections and Future Outlook"
+**AVOID ELEMENT DUPLICATION:**
+- If one section has "annual sales data table", don't put similar sales tables elsewhere
+- If one section lists "growth factors", don't repeat growth-related lists in other sections
+- Each data point should have one primary home in the report structure
 
-6. SECTION SUMMARIES:
-- Write 1-2 sentence summaries that clearly indicate section content
-- Help content generators understand what belongs in each section
-- Provide enough detail to avoid section overlap
-- Focus on what information will be presented, not conclusions
+**STRATEGIC PLACEMENT:**
+- Put foundational tables/data in overview sections
+- Place detailed breakdowns in analysis sections
+- Put forward-looking lists/recommendations in conclusion sections
 
-Remember: Your outline will directly determine how the final report is organized and presented. Create a structure that tells a compelling, logical story with the research data while ensuring comprehensive coverage of all key findings.
+6. SECTION DESIGN WITH ELEMENTS:
+
+**EXAMPLE ELEMENT ASSIGNMENTS:**
+
+**Market Overview Section:**
+- "Current market size table with 2024 key metrics (units sold, revenue, growth rate)"
+- "Market segment breakdown table showing SUV, sedan, hatchback performance"
+
+**Growth Analysis Section:**
+- "Year-over-year growth comparison table (2020-2024)"
+- "List of top 5 factors driving market growth"
+
+**Challenges Section:**
+- "List of major market challenges and their impact levels"
+- "Regional performance disparity table showing urban vs rural sales"
+
+**Policy Impact Section:**
+- "List of key government policies affecting automotive sales"
+- "Tax structure comparison table (before/after recent changes)"
+
+7. QUALITY CRITERIA:
+- Each special element should have clear business relevance
+- No two sections should have overlapping data presentations
+- Elements should enhance understanding, not just display data
+- Each section should have 1-4 special elements maximum
+- Element descriptions should be specific enough for content generators to understand exactly what to create
+
+EXAMPLE OUTPUT:
+For "India Car Sales Growth Research":
+
+Section: "market-overview"
+Title: "Current Market Performance and Size"
+Special Elements: 
+- "Market performance summary table showing 2024 total sales, growth rate, and key metrics"
+- "Vehicle segment breakdown table displaying sales volumes and market share by SUV, sedan, hatchback categories"
+
+Section: "growth-drivers" 
+Title: "Factors Driving Market Growth"
+Special Elements:
+- "List of primary growth drivers ranked by impact on sales volume"
+- "Consumer preference shift analysis table comparing 2020 vs 2024 buying patterns"
+
+Remember: Each special element should be strategically placed, contextually specific, and non-duplicative. Your element assignments will directly guide content creation and ensure comprehensive, well-structured data presentation.
 `;
 
 const sectionSchema = z
@@ -80,28 +117,35 @@ const sectionSchema = z
     id: z
       .string()
       .describe(
-        "Unique HTML identifier for the section (e.g., 'intro', 'conclusion')"
+        "Unique HTML identifier for the section (e.g., 'market-overview', 'growth-analysis')"
       ),
-    title: z.string().describe("Title or heading of the section"),
-    summary: z.string().describe("Brief overview of what this section covers"),
+    title: z.string().describe("Descriptive title of the section"),
+    summary: z.string().describe("Brief overview of what this section covers and analyzes"),
+    specialElements: z
+      .array(
+        z.string().describe(
+          "Specific, contextual description of data presentation element needed (e.g., 'Sales performance table showing annual units 2020-2024 by vehicle category', 'List of top 5 government policies affecting car sales in 2024')"
+        )
+      )
+      .describe("Array of specific, contextual special elements (tables, lists) that will enhance this section's content presentation and avoid duplication across sections"),
   })
-  .describe("A single section in the table of contents");
+  .describe("A single section with strategically assigned special elements");
 
 const outputType = z
   .object({
-    reportTitle: z.string().describe("Main title of the report"),
-    reportSummary: z.string().describe("Concise summary of the entire report"),
+    reportTitle: z.string().describe("Main title of the comprehensive report"),
+    reportSummary: z.string().describe("Concise summary of the entire report scope and key findings"),
     tableOfContents: z
       .array(sectionSchema)
-      .min(1)
-      .max(10)
-      .describe("List of sections comprising the document outline"),
+      .min(4)
+      .max(8)
+      .describe("Strategically structured list of sections with specific, non-duplicative special elements assigned to optimize data presentation"),
   })
-  .describe("Structured outline for a document report");
+  .describe("Comprehensive report outline with strategic element placement ensuring no duplication and maximum data presentation effectiveness");
 
 export default Agent.create({
-  name: "TableOfContentGenerator",
-  model: "gpt-4o-mini",
+  name: "TableOfContentGenerator", 
+  model: "gpt-4o",
   instructions,
   outputType,
 });
