@@ -4,7 +4,9 @@ This document describes how to test the CLI interface of the Deep Research Agent
 
 ## Prerequisites
 
-1. Ensure you have set up your `.env` file with a valid OpenAI API key
+1. Ensure you have set up your `.env` file with valid API keys:
+   - OpenAI API key (required for AI processing)
+   - Tavily API key (required for web search functionality)
 2. Make sure the project has been built successfully with `npm run build`
 
 ## Test Commands
@@ -44,7 +46,9 @@ Follow the same steps as above to verify the production build works correctly.
 ## Troubleshooting
 
 If the CLI doesn't start:
-1. Verify your API key is correctly set in `.env`
+1. Verify your API keys are correctly set in `.env`:
+   - Check that `OPENAI_API_KEY` is set
+   - Check that `TAVILY_API_KEY` is set
 2. Check that all dependencies are installed with `npm install`
 3. Ensure the project builds correctly with `npm run build`
 

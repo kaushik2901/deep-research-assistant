@@ -9,13 +9,21 @@ Before you begin, ensure you have the following installed:
 - npm (usually comes with Node.js) or yarn
 - Git (optional, but recommended)
 
-## Step 1: Get an OpenAI API Key
+## Step 1: Get Required API Keys
 
+## OpenAI API Key
 1. Visit [OpenAI's platform](https://platform.openai.com/)
 2. Sign up for an account or log in if you already have one
 3. Navigate to the API keys section
 4. Create a new API key
 5. Save this key securely - you'll need it in the next step
+
+## Tavily API Key (for web search)
+1. Visit [Tavily's platform](https://tavily.com/)
+2. Sign up for an account or log in if you already have one
+3. Navigate to the API keys section
+4. Create a new API key
+5. Save this key securely - you'll need it for web search functionality
 
 ## Step 2: Clone the Repository
 
@@ -50,10 +58,11 @@ Create a `.env` file from the example:
 cp env.example .env
 ```
 
-Open the `.env` file in a text editor and add your OpenAI API key:
+Open the `.env` file in a text editor and add your API keys:
 
 ```
-OPENAI_API_KEY=your_actual_api_key_here
+OPENAI_API_KEY=your_actual_openai_api_key_here
+TAVILY_API_KEY=your_actual_tavily_api_key_here
 ```
 
 Optional: Add your OpenAI organization ID if you have one:
