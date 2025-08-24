@@ -4,6 +4,7 @@ import { run } from "@openai/agents";
 import queryBuilder from "./agents/query-builder.agent";
 import ambiguityDetector from "./agents/ambiguous-query-detector.agent";
 import searchPlanner from "./agents/search-planner.agent";
+import searchExecutorAgent from "./agents/search-executor.agent";
 
 config();
 
@@ -28,8 +29,14 @@ async function main() {
   context.query = userInput;
 
   while (true) {
+    console.log("Query generation started..");
+
     const qbResponse = await run(queryBuilder, context.query);
     context.query = qbResponse.finalOutput ?? "";
+
+    console.log("Query generation completed");
+
+    console.log("Ambiguity detection started..");
 
     const adResponse = await run(ambiguityDetector, context.query);
     const ambiguity = adResponse.finalOutput;
@@ -59,10 +66,23 @@ async function main() {
     context.iterationCount++;
   }
 
+  console.log("Ambiguity detection completed");
+
+  console.log("Search planning started...");
+
   const spResponse = await run(searchPlanner, context.query);
-  for (const item of spResponse.finalOutput?.searches ?? []) {
-    console.log(item.reason, item.query);
-  }
+  const searches = spResponse.finalOutput?.searches ?? [];
+
+  console.log("Search planning completed");
+
+  const seResponses = await Promise.all(
+    searches.map((search) => run(searchExecutorAgent, JSON.stringify(search)))
+  );
+  const searchResults = seResponses
+    .map((x) => x.finalOutput ?? "")
+    .filter((x) => !!x);
+
+  console.log(searchResults);
 
   rl.close();
 }
