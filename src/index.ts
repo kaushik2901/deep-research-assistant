@@ -1,9 +1,13 @@
 import { config } from "dotenv";
 import readline from "readline";
-import { AgentInputItem, run, assistant, user } from "@openai/agents";
-import queryClarifierAgent from "./agents/query-clarifier.agent";
+import { run } from "@openai/agents";
+import queryBuilder from "./agents/query-builder.agent";
+import ambiguityDetector from "./agents/ambiguous-query-detector.agent";
+import searchPlanner from "./agents/search-planner.agent";
 
 config();
+
+const MAX_CLARIFICATION_ITERATION = 2;
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -15,31 +19,49 @@ function ask(prompt: string): Promise<string> {
 }
 
 async function main() {
-  const history: AgentInputItem[] = [];
+  const context = {
+    query: "",
+    iterationCount: 0,
+  };
 
-  // initial user prompt
-  const initial = await ask("Enter your research query");
-  history.push({ role: "user", content: initial });
+  const userInput = await ask("Enter your research query");
+  context.query = userInput;
 
   while (true) {
-    // run agent with conversation history
-    const result = await run(queryClarifierAgent, history);
+    const qbResponse = await run(queryBuilder, context.query);
+    context.query = qbResponse.finalOutput ?? "";
 
-    const assistantMsg = result.finalOutput;
-    history.push(assistant(assistantMsg!));
-
-    // if agent produced a final answer
-    console.log("🤖 Assistant:");
-    console.log(result.finalOutput);
-
-    // else, it should have asked a question
-    const reply = await ask("You:");
-
-    if (reply.toLocaleLowerCase() === "exit") {
+    const adResponse = await run(ambiguityDetector, context.query);
+    const ambiguity = adResponse.finalOutput;
+    if (!ambiguity || !ambiguity?.isAmbiguousQuery) {
       break;
     }
 
-    history.push(user(reply));
+    if (context.iterationCount < MAX_CLARIFICATION_ITERATION) {
+      break;
+    }
+
+    const answers = [];
+    for (const question of ambiguity.criticalAmbiguities) {
+      const answer = await ask(`${question}`);
+      answers.push({ question, answer });
+    }
+
+    const reason = ambiguity?.ambiguityReason;
+    context.query = `
+        {
+            "query": "${context.query}", 
+            "ambiguityReason": "${reason}", 
+            "questionAnswers": "${JSON.stringify(answers)}"
+        }
+    `;
+
+    context.iterationCount++;
+  }
+
+  const spResponse = await run(searchPlanner, context.query);
+  for (const item of spResponse.finalOutput?.searches ?? []) {
+    console.log(item.reason, item.query);
   }
 
   rl.close();

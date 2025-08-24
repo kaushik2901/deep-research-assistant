@@ -1,18 +1,26 @@
 - Agent loop for query clarification (Goal is to have non-ambiguous query without frustrating user)
     - User inputs
+    - Use web_search tool for getting latest context about research topic (which might help reducing ambiguity automatically)
     - Use check_for_ambiguous_query tool to find ambiguity
     - Use generate_clarification_questions tool to generate questions for user
-    - Ask user those questions
+    - This can go in loop until agent is confident that query is unambiguous after that it can handoff the conversation to research agent
 - Agent loop for research (Goal is to collect enough data from different sites to generate final report)
     - Use search_planner (reasoning) tool to generate a search plan array
-    - Use google_search tool in parallel for each item in search plan
-    - Use search_planner (reasoning) tool (again but with search data) to find more search plan array (only if required)
-    - Use google_search tool in parallel for each item in new search plan
+    - Use web_search tool in parallel for each item in search plan
+    - This can go in loop until agent is confident that it has enough data to build the report after that it can handoff the conversation to report generator agent
 - Agent loop for report generation (Goal is to generate error free and rich document which user can trust)
-    - Use report_generator tool to generate reports in LATEX / MARKDOWN
-    - Use code_interpreter tool to plot charts
-    - Use citation_generator tool to generate citation
-    - Use report_evaluator tool to get feedback for report
+    - Use code_interpreter tool to plot charts and saves it as image
+    - Generates report in HTML file (which includes charts if any)
+    - Use report_evaluator tool reads the report and gives feedback for report
     - Use report_generator tool to update report based on feedback from the evaluator
-    - Use grammar_evaluator tool to get grammatical feedback for report
-    - Use report_generator tool to update report based on feedback from the evaluator
+    - This can go in loop until agent is confident for the report it generated, after that it can return report to user
+
+
+- Query builder agent
+    - Do a basic web search on user's input to get current situation and context
+    - Builds a comprehensive query to pass to next agent
+- Ambiguity detector agent
+    - Analyzes the query and checks for the ambiguity
+    - If ambiguity found it returns the threshold and reason
+- Clarification questions generator 
+    - 
