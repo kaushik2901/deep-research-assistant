@@ -7,7 +7,7 @@ import Search from "../types/search.type";
 export default async function runSearchExecutor(
   searches: Search[]
 ): Promise<string[]> {
-  const executionSpinner = ora({
+  const spinner = ora({
     text: chalk.gray(`Executing ${searches.length} searches in parallel...`),
     spinner: "clock",
   }).start();
@@ -21,7 +21,7 @@ export default async function runSearchExecutor(
       .map((x) => x.finalOutput ?? "")
       .filter((x) => !!x);
 
-    executionSpinner.succeed(
+    spinner.succeed(
       chalk.green(
         `Search execution completed. Retrieved ${searchResults.length} result sets`
       )
@@ -29,7 +29,7 @@ export default async function runSearchExecutor(
 
     return searchResults;
   } catch (error) {
-    executionSpinner.fail(chalk.red("Failed during search execution"));
+    spinner.fail(chalk.red("Failed during search execution"));
     throw error;
   }
 }

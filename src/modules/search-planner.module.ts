@@ -7,7 +7,7 @@ import searchPlannerAgent from "../agents/search-planner.agent";
 export default async function runSearchPlanner(
   query: string
 ): Promise<Search[]> {
-  const planningSpinner = ora({
+  const spinner = ora({
     text: chalk.gray("Planning research strategy..."),
     spinner: "clock",
   }).start();
@@ -15,14 +15,14 @@ export default async function runSearchPlanner(
   try {
     const spResponse = await run(searchPlannerAgent, query);
     const searches = spResponse.finalOutput?.searches ?? [];
-    planningSpinner.succeed(
+    spinner.succeed(
       chalk.green(
         `Research plan created with ${searches.length} search strategies`
       )
     );
     return searches;
   } catch (error) {
-    planningSpinner.fail(chalk.red("Failed to create research plan"));
+    spinner.fail(chalk.red("Failed to create research plan"));
     throw error;
   }
 }

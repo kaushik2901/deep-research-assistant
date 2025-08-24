@@ -4,17 +4,17 @@ import chalk from "chalk";
 import ora from "ora";
 
 export default async function runQueryBuilder(query: string): Promise<string> {
-  const queryBuildingSpinner = ora({
+  const spinner = ora({
     text: chalk.gray("Building comprehensive query..."),
     spinner: "clock",
   }).start();
 
   try {
     const qbResponse = await run(queryBuilderAgent, query);
-    queryBuildingSpinner.succeed(chalk.green("Query built successfully"));
+    spinner.succeed(chalk.green("Query built successfully"));
     return qbResponse.finalOutput ?? "";
   } catch (error) {
-    queryBuildingSpinner.fail(chalk.red("Failed to build query"));
+    spinner.fail(chalk.red("Failed to build query"));
     throw error;
   }
 }

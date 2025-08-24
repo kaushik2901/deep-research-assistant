@@ -7,14 +7,14 @@ import Ambiguity from "../types/ambiguity.type";
 export default async function runAmbiguityDetector(
   query: string
 ): Promise<Ambiguity> {
-  const ambiguitySpinner = ora({
+  const spinner = ora({
     text: chalk.gray("Detecting ambiguities..."),
     spinner: "clock",
   }).start();
 
   try {
     const adResponse = await run(ambiguousQueryDetectorAgent, query);
-    ambiguitySpinner.succeed(chalk.green("Ambiguity detection completed"));
+    spinner.succeed(chalk.green("Ambiguity detection completed"));
     return (
       adResponse.finalOutput ?? {
         isAmbiguousQuery: false,
@@ -24,7 +24,7 @@ export default async function runAmbiguityDetector(
       }
     );
   } catch (error) {
-    ambiguitySpinner.fail(chalk.red("Failed during ambiguity detection"));
+    spinner.fail(chalk.red("Failed during ambiguity detection"));
     throw error;
   }
 }
