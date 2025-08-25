@@ -5,6 +5,7 @@ import ora from "ora";
 import TableOfContent from "../types/table-of-content.type";
 import Reference from "../types/reference.type";
 import Section from "../types/section.type";
+import { generateSlug } from "../utils/slug.util";
 
 export default async function runReportGenerator(
   documentOutline: TableOfContent,
@@ -39,9 +40,13 @@ export default async function runReportGenerator(
       .replace("##Sections##", sectionsTemplate)
       .replace("##References##", referencesTemplate);
 
-    await fs.writeFile("./report.html", report);
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+    const slug = generateSlug(documentOutline.reportTitle);
+    const filename = `${slug}-${timestamp}.html`;
+    
+    await fs.writeFile(filename, report);
 
-    spinner.succeed(chalk.green("Report generated successfully"));
+    spinner.succeed(chalk.green(`Report generated successfully: ${filename}`));
   } catch (error) {
     spinner.fail(chalk.red("Failed to generate report"));
     throw error;
