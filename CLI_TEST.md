@@ -1,6 +1,6 @@
-# Deep Research Agent CLI Test
+# Deep Research Assistant CLI Test
 
-This document describes how to test the CLI interface of the Deep Research Agent.
+This document describes how to test the CLI interface of the Deep Research Assistant.
 
 ## Prerequisites
 

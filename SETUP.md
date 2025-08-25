@@ -1,6 +1,6 @@
 # Setup Guide
 
-This guide will help you set up the Deep Research Agent on your local machine.
+This guide will help you set up the Deep Research Assistant on your local machine.
 
 ## Prerequisites
 
@@ -30,8 +30,8 @@ Before you begin, ensure you have the following installed:
 Open your terminal and run:
 
 ```bash
-git clone https://github.com/your-username/deep-research-agent.git
-cd deep-research-agent
+git clone https://github.com/kaushik2901/deep-research-assistant.git
+cd deep-research-assistant
 ```
 
 If you don't have Git installed, you can download the repository as a ZIP file and extract it.
@@ -117,6 +117,6 @@ When you first run the agent, you'll be greeted with a professional CLI interfac
 ### Getting Help
 
 If you encounter any issues not covered here:
-1. Check the [GitHub Issues](https://github.com/your-username/deep-research-agent/issues) page
+1. Check the [GitHub Issues](https://github.com/kaushik2901/deep-research-assistant/issues) page
 2. Create a new issue if your problem hasn't been reported
 3. Include detailed information about your environment and the error you're seeing

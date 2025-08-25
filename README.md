@@ -1,10 +1,10 @@
-# Deep Research Agent 🧠
+# Deep Research Assistant 🧠
 
-An intelligent research agent with ambiguity detection and clarification capabilities that automates comprehensive deep research workflows and generates professional research reports.
+An intelligent research assistant with ambiguity detection and clarification capabilities that automates comprehensive deep research workflows and generates professional research reports.
 
 ## Overview
 
-The Deep Research Agent is an advanced AI-powered tool that transforms vague or ambiguous research queries into comprehensive, well-structured research reports. It uses multiple specialized agents working in coordination to ensure high-quality research output while maintaining an intuitive user experience. The agent not only conducts research but also synthesizes findings into professional HTML reports with proper structure, references, and formatting.
+The Deep Research Assistant is an advanced AI-powered tool that transforms vague or ambiguous research queries into comprehensive, well-structured research reports. It uses multiple specialized agents working in coordination to ensure high-quality research output while maintaining an intuitive user experience. The agent not only conducts research but also synthesizes findings into professional HTML reports with proper structure, references, and formatting.
 
 ## Current Status ✅
 
@@ -107,8 +107,8 @@ The Deep Research Agent is an advanced AI-powered tool that transforms vague or 
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd deep-research-agent
+git clone https://github.com/kaushik2901/deep-research-assistant.git
+cd deep-research-assistant
 ```
 
 2. Install dependencies:

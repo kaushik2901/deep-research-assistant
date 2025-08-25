@@ -1,5 +1,5 @@
 {
-  "name": "deep-research-agent",
+  "name": "deep-research-assistant",
   "version": "1.0.0",
   "description": "An intelligent research agent with ambiguity detection and clarification capabilities that automates comprehensive deep research workflows",
   "keywords": [
@@ -11,13 +11,13 @@
     "query-processing",
     "information-retrieval"
   ],
-  "homepage": "https://github.com/your-username/deep-research-agent#readme",
+      "homepage": "https://github.com/kaushik2901/deep-research-assistant#readme",
   "bugs": {
-    "url": "https://github.com/your-username/deep-research-agent/issues"
+          "url": "https://github.com/kaushik2901/deep-research-assistant/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/deep-research-agent.git"
+          "url": "https://github.com/kaushik2901/deep-research-assistant.git"
   },
   "license": "MIT",
   "author": "Your Name <your.email@example.com>",

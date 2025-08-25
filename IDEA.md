@@ -1,8 +1,8 @@
-# Deep Research Agent - Project Vision
+# Deep Research Assistant - Project Vision
 
 ## Core Concept
 
-The Deep Research Agent is an AI-powered research assistant that transforms the way people conduct comprehensive research. Instead of manually searching, filtering, and synthesizing information from multiple sources, users can describe their research needs in natural language and let the agent handle the complex process of gathering, organizing, and presenting relevant information.
+The Deep Research Assistant is an AI-powered research assistant that transforms the way people conduct comprehensive research. Instead of manually searching, filtering, and synthesizing information from multiple sources, users can describe their research needs in natural language and let the agent handle the complex process of gathering, organizing, and presenting relevant information.
 
 ## Problem Statement
 
@@ -15,7 +15,7 @@ Traditional research workflows are inefficient and time-consuming:
 
 ## Solution Approach
 
-The Deep Research Agent addresses these challenges through a multi-agent architecture:
+The Deep Research Assistant addresses these challenges through a multi-agent architecture:
 
 ### 1. Intelligent Query Processing
 - Automatically detects ambiguities in research queries
@@ -154,4 +154,4 @@ Information is organized by research area and source type, making synthesis and 
 
 ## Conclusion
 
-The Deep Research Agent represents a fundamental shift in how people conduct research, moving from manual, iterative searching to intelligent, automated research workflows. By combining ambiguity intelligence with strategic search planning, the agent ensures comprehensive, relevant research results while maintaining an intuitive user experience.
+The Deep Research Assistant represents a fundamental shift in how people conduct research, moving from manual, iterative searching to intelligent, automated research workflows. By combining ambiguity intelligence with strategic search planning, the assistant ensures comprehensive, relevant research results while maintaining an intuitive user experience.
