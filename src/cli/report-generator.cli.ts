@@ -6,6 +6,7 @@ import TableOfContent from "../types/table-of-content.type";
 import Reference from "../types/reference.type";
 import Section from "../types/section.type";
 import { buildReportHtml, buildFilename } from "../services/report-generator.service";
+import { withRetry } from "../utils/retry.util";
 
 export default async function runReportGenerator(
   documentOutline: TableOfContent,
@@ -24,7 +25,7 @@ export default async function runReportGenerator(
     const report = buildReportHtml(documentOutline, sections, references, template);
     const filename = buildFilename(documentOutline.reportTitle, new Date());
 
-    await fs.writeFile(filename, report);
+    await withRetry(async () => fs.writeFile(filename, report), { maxRetries: 2, baseDelay: 500 });
 
     spinner.succeed(chalk.green(`Report generated successfully: ${filename}`));
   } catch (error) {

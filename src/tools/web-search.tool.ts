@@ -1,6 +1,9 @@
 import { tool } from "@openai/agents";
 import { tavily } from "@tavily/core";
 import { z } from "zod";
+import { withTimeout } from "../utils/timeout.util";
+
+const TAVILY_TIMEOUT = 30_000;
 
 const webSearchTool = tool({
   name: "web_search",
@@ -14,11 +17,18 @@ const webSearchTool = tool({
       ),
   }),
   async execute({ searchQuery }) {
-    const client = tavily({
-      apiKey: process.env.TAVILY_API_KEY,
-    });
-    const searchResult = await client.search(searchQuery);
-    return searchResult;
+    const result = await withTimeout(
+      async () => {
+        const client = tavily({
+          apiKey: process.env.TAVILY_API_KEY,
+        });
+        return await client.search(searchQuery);
+      },
+      TAVILY_TIMEOUT,
+      "Tavily search"
+    );
+
+    return result;
   },
 });
 

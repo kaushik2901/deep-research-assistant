@@ -3,8 +3,11 @@ import chalk from "chalk";
 import ora from "ora";
 import { generateSections } from "../services/report-sections.service";
 import { withRetry } from "../utils/retry.util";
+import { withTimeout } from "../utils/timeout.util";
 import { TableOfContentSection } from "../types/table-of-content.type";
 import Section from "../types/section.type";
+
+const AGENT_TIMEOUT = 120_000;
 
 export default async function runReportSectionsGenerator(
   tableOfContents: TableOfContentSection[],
@@ -17,7 +20,11 @@ export default async function runReportSectionsGenerator(
 
   try {
     const sections = await withRetry(() =>
-      generateSections(tableOfContents, searchResults, { run })
+      withTimeout(
+        () => generateSections(tableOfContents, searchResults, { run }),
+        AGENT_TIMEOUT,
+        "Report sections"
+      )
     );
     spinner.succeed(chalk.green("Sections generated successfully"));
     return sections;
