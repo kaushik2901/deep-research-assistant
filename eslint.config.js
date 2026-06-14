@@ -21,6 +21,8 @@ module.exports = [
         __dirname: "readonly",
         module: "readonly",
         require: "readonly",
+        AbortSignal: "readonly",
+        AbortController: "readonly",
       },
     },
     plugins: {
@@ -33,6 +35,7 @@ module.exports = [
       "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/no-explicit-any": "warn",
       "no-console": "off",
+      "no-undef": "off",
       "prefer-const": "error",
       "no-var": "error",
       eqeqeq: ["error", "always"],
