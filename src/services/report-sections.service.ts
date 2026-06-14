@@ -2,6 +2,9 @@ import reportSectionGeneratorAgent from "../agents/report-section-generator.agen
 import { TableOfContentSection } from "../types/table-of-content.type";
 import Section from "../types/section.type";
 import { AgentRunner } from "./agent-runner";
+import { runBatched } from "../utils/batch.util";
+
+const BATCH_SIZE = 3;
 
 async function generateSingleSection(
   title: string,
@@ -26,8 +29,10 @@ export async function generateSections(
   searchResults: string[],
   runner: AgentRunner
 ): Promise<Section[]> {
-  const sections = await Promise.all(
-    tableOfContents.map(async ({ id, title, summary, specialElements }) => {
+  const sections = await runBatched(
+    tableOfContents,
+    BATCH_SIZE,
+    async ({ id, title, summary, specialElements }) => {
       const html = await generateSingleSection(
         title,
         summary,
@@ -36,7 +41,7 @@ export async function generateSections(
         runner
       );
       return { id, title, html };
-    })
+    }
   );
   return sections;
 }
