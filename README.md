@@ -1,275 +1,252 @@
-# Deep Research Assistant 🧠
+# Deep Research Assistant
 
-An intelligent research assistant with ambiguity detection and clarification capabilities that automates comprehensive deep research workflows and generates professional research reports.
+An AI-powered CLI tool that transforms vague research queries into professional HTML reports using a multi-agent pipeline.
 
-## Overview
+## Features
 
-The Deep Research Assistant is an advanced AI-powered tool that transforms vague or ambiguous research queries into comprehensive, well-structured research reports. It uses multiple specialized agents working in coordination to ensure high-quality research output while maintaining an intuitive user experience. The agent not only conducts research but also synthesizes findings into professional HTML reports with proper structure, references, and formatting.
+- **Ambiguity detection** — identifies 5 types of query ambiguity (scope, temporal, definitional, geographical, purpose)
+- **Interactive clarification** — asks targeted questions to refine vague queries (max 2 rounds)
+- **Strategic search planning** — generates 5 non-overlapping search strategies
+- **Parallel web search** — executes searches concurrently via Tavily with batch concurrency
+- **Multi-agent report generation** — TOC, sections, references, and full HTML assembly
+- **Provider flexibility** — supports OpenAI and any OpenAI-compatible API (Ollama, LM Studio, etc.)
+- **Resilience built-in** — timeouts, retries with jitter, typed error hierarchy, graceful degradation
 
-## Status
+## Quick start
 
-Core multi-agent research workflow is implemented with ambiguity detection, web search integration, and HTML report generation. The project is in active development toward production readiness.
-
-## Key Features
-
-### 🔍 Intelligent Query Processing
-- **Ambiguity Detection**: Automatically identifies unclear or ambiguous research queries
-- **Contextual Clarification**: Generates targeted questions to refine research scope
-- **Query Enhancement**: Builds comprehensive research directives with current context
-
-### 🧠 Multi-Agent Architecture
-- **Query Builder Agent**: Transforms user inputs into structured research queries
-- **Ambiguity Detector Agent**: Identifies and classifies query ambiguities
-- **Clarification Questions Generator**: Creates targeted questions to resolve ambiguities
-- **Search Planner Agent**: Creates strategic search plans covering diverse perspectives
-- **Search Executor Agent**: Gathers factual information from authoritative sources
-- **Table of Contents Generator**: Creates structured document outlines
-- **Report Sections Generator**: Generates detailed content for each section
-- **References Generator**: Compiles comprehensive reference lists
-- **Report Generator**: Synthesizes everything into professional HTML reports
-
-### 📊 Complete Research Workflow
-1. **Query Refinement**: Enhances initial queries with current context and clarity
-2. **Ambiguity Resolution**: Iteratively clarifies ambiguous elements through targeted questions
-3. **Strategic Planning**: Designs comprehensive search strategies covering multiple angles
-4. **Parallel Execution**: Executes searches concurrently for efficiency
-5. **Content Generation**: Creates structured document outlines and detailed sections
-6. **Report Synthesis**: Generates professional HTML reports with proper formatting
-
-## Architecture
-
-```
-┌─────────────────┐    ┌──────────────────────┐    ┌──────────────────────┐
-│   User Input    │───▶│   Query Builder      │───▶│ Ambiguity Detector   │
-└─────────────────┘    └──────────────────────┘    └──────────────────────┘
-                                │                           │
-                                ▼                           ▼
-                    ┌──────────────────────┐    ┌──────────────────────┐
-                    │  Query Clarification │◀───│  Ambiguity Analysis  │
-                    └──────────────────────┘    └──────────────────────┘
-                                │
-                                ▼
-                    ┌──────────────────────┐
-                    │   Search Planner     │
-                    └──────────────────────┘
-                                │
-                                ▼
-                    ┌──────────────────────┐
-                    │ Search Executor(s)   │
-                    └──────────────────────┘
-                                │
-                                ▼
-                    ┌──────────────────────┐
-                    │ Table of Contents    │
-                    │      Generator       │
-                    └──────────────────────┘
-                                │
-                                ▼
-                    ┌──────────────────────┐
-                    │ Report Sections      │
-                    │     Generator        │
-                    └──────────────────────┘
-                                │
-                                ▼
-                    ┌──────────────────────┐
-                    │ References Generator │
-                    └──────────────────────┘
-                                │
-                                ▼
-                    ┌──────────────────────┐
-                    │  Report Generator    │
-                    │  (HTML Output)       │
-                    └──────────────────────┘
-```
-
-## Installation
-
-### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
-- OpenAI API key
-- Tavily API key (for web search capabilities)
-
-### Setup
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/kaushik2901/deep-research-assistant.git
-cd deep-research-assistant
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Set up environment variables:
-```bash
-cp env.example .env
-# Edit .env and add your API keys:
-# OPENAI_API_KEY=your_openai_api_key_here
-# TAVILY_API_KEY=your_tavily_api_key_here
-```
-
-4. Build the project:
-```bash
-npm run build
-```
-
-## Usage
-
-### Development Mode
-```bash
-npm run dev
-```
-
-### Production Mode
-```bash
-npm start
-```
-
-### Global Installation (Optional)
-You can also install the agent globally to use it from anywhere:
-```bash
-npm install -g .
+npm install -g deep-research-assistant
 deep-research
 ```
 
-### CLI Interface
-The agent provides an interactive CLI interface that guides you through the complete research process:
+On first run, the interactive setup wizard guides you through configuring your LLM and search providers.
 
-1. Enter your research query
-2. Answer clarification questions (if any)
-3. Review the research strategy
-4. Wait for research completion
-5. Receive a professional HTML research report
+## Installation
 
-## Agent Details
+### Global (recommended)
 
-### Query Builder Agent
-Transforms user inputs into comprehensive research queries by:
-- Performing immediate web searches for current context
-- Building structured research directives with timeframes and focus areas
-- Incorporating recent developments and trends
+```bash
+npm install -g deep-research-assistant
+deep-research --help
+```
 
-### Ambiguity Detector Agent
-Analyzes queries for five types of ambiguities:
-- **Scope Ambiguity**: Too broad or unclear boundaries
-- **Temporal Ambiguity**: Missing or unclear timeframes
-- **Definitional Ambiguity**: Unclear terms or jargon
-- **Geographical/Demographic Ambiguity**: Missing location or population context
-- **Purpose Ambiguity**: Unclear research goals or intended use
+### From source
 
-### Clarification Questions Generator
-Creates targeted questions that resolve critical ambiguities while maintaining a smooth user experience:
-- Prioritizes questions by impact on research quality
-- Includes specific options or examples when helpful
-- Uses conversational language for better user experience
+```bash
+git clone https://github.com/kaushik2901/deep-research-assistant.git
+cd deep-research-assistant
+npm install
+npm run build
+npm start
+```
 
-### Search Planner Agent
-Develops strategic search plans covering:
-- Different aspects of the topic (no overlap)
-- Various source types (news, academic, industry reports)
-- Different time perspectives (recent, historical, future)
-- Multiple viewpoints (industry, consumer, regulatory)
+## CLI reference
 
-### Search Executor Agent
-Executes searches and extracts factual information:
-- Focuses on hard facts, statistics, and data
-- Prioritizes recent, authoritative sources
-- Outputs concise bullet points for easy synthesis
+| Flag | Description |
+|------|-------------|
+| `deep-research` | Run the research pipeline (with auto-setup on first run) |
+| `deep-research --setup` | Re-run the interactive configuration wizard |
+| `deep-research --help` | Show help message |
+| `deep-research --version` | Show version number |
 
-### Table of Contents Generator
-Creates structured document outlines:
-- Organizes research findings into logical sections
-- Ensures comprehensive coverage of the topic
-- Provides clear navigation structure
+## First run
 
-### Report Sections Generator
-Generates detailed content for each section:
-- Synthesizes research findings into coherent narratives
-- Maintains academic writing standards
-- Ensures proper flow between sections
+On first launch the setup wizard asks for:
 
-### References Generator
-Compiles comprehensive reference lists:
-- Extracts source information from search results
-- Formats references according to standard citation styles
-- Provides direct links to source materials
+1. **LLM provider** — `openai` (default) or `openai-compatible` (custom base URL like `http://localhost:1234/v1`)
+2. **API key** for your chosen provider
+3. **Tavily API key** for web search
 
-### Report Generator
-Synthesizes all components into professional reports:
-- Generates clean, formatted HTML output
-- Includes proper styling and navigation
-- Creates self-contained reports ready for sharing
+Config is saved to `~/.config/deep-research/config.json`. Environment variables (`.env` file) work as a fallback.
 
-## Example Workflow
+## How it works
 
-**User Input**: "AI impact on jobs"
+```mermaid
+flowchart LR
+    A[User Query] --> B[Query Builder]
+    B --> C[Ambiguity Detector]
+    C -->|ambiguous| D[Ask Clarification]
+    D --> E[Rebuild Query]
+    E --> C
+    C -->|clear| F[Search Planner]
+    F --> G[Search Executor]
+    G --> H[TOC Generator]
+    H --> I[Section Generator]
+    I --> J[References Generator]
+    J --> K[Report Generator]
+    K --> L[HTML Report]
 
-**Clarification Questions**:
-1. "What industry or job sector are you most interested in? (e.g., manufacturing, healthcare, customer service)"
-2. "What timeframe are you interested in - recent impacts (2020-2024), historical analysis, or future projections?"
-3. "Are you looking at this from a global perspective or a specific country/region?"
+    style L stroke:#2ecc71,stroke-width:2px
+```
 
-**Enhanced Query**: After user responses, creates a comprehensive research directive.
+## Architecture
 
-**Research Strategy**:
-1. Recent statistics on AI adoption and job displacement (2022-2024)
-2. Industry expert analysis on job transformation vs elimination
-3. Government policies and workforce retraining initiatives
-4. Economic impact studies on specific sectors
-5. Future job market projections and emerging roles
+### Code layers
 
-**Output**: Professional HTML research report with:
-- Executive summary and table of contents
-- Detailed sections covering each research area
-- Comprehensive references and source links
-- Professional formatting and styling
+```mermaid
+flowchart TB
+    subgraph CLI["CLI Layer (src/cli/)"]
+        Spinner[ora spinners]
+        Chalk[chalk output]
+        Retry[withRetry + withTimeout]
+    end
 
-## Output
+    subgraph Services["Service Layer (src/services/)"]
+        Logic[Agent orchestration logic]
+        Runner[AgentRunner interface]
+    end
 
-The agent generates a complete research report saved as `report.html` in your project directory. The report includes:
+    subgraph Agents["Agent Layer (src/agents/)"]
+        QA[Query Builder]
+        AD[Ambiguity Detector]
+        CQ[Clarification Questions]
+        SP[Search Planner]
+        SE[Search Executor]
+        TC[Table of Contents]
+        RS[Report Sections]
+        RG[References Generator]
+    end
 
-- **Professional Styling**: Clean, academic formatting with proper typography
-- **Navigation**: Clickable table of contents for easy navigation
-- **Structured Content**: Well-organized sections with clear headings
-- **References**: Complete source citations with direct links
-- **Responsive Design**: Optimized for both screen and print viewing
+    subgraph Tools["Tools (src/tools/)"]
+        WS[Web Search - Tavily]
+    end
 
-## Project Structure
+    CLI --> Services --> Agents --> Tools
+```
+
+### Research pipeline detail
+
+```mermaid
+flowchart TB
+    Start([User enters query]) --> QB[Query Builder Agent\nEnhances query with web context]
+    QB --> AD{Ambiguity Detector}
+
+    AD -->|Ambiguous| AF[Clarification Questions\nGenerated 1-6 questions]
+    AF --> UserQA[User answers questions]
+    UserQA --> RQ[Rebuild query with\nclarifications]
+    RQ --> AD
+
+    AD -->|Clear| SP[Search Planner\n5 strategic searches]
+    SP --> SE[Search Executor\nParallel execution, batch size 3]
+    SE --> TOC[Table of Contents\nGenerator - gpt-4o]
+    TOC --> Sections[Report Sections\nGenerator - parallel]
+    Sections --> Refs[References\nGenerator]
+    Refs --> Report[Report Generator\nHTML assembly]
+    Report --> HTML[(HTML Report File)]
+
+    style HTML fill:#2ecc71,color:#fff
+    style Start fill:#3498db,color:#fff
+```
+
+### Resilience features
+
+```mermaid
+flowchart LR
+    subgraph Timeouts["⏱ Timeouts"]
+        T1[120s per agent call]
+        T2[30s per search call]
+    end
+
+    subgraph Retry["🔄 Retry"]
+        R1[up to 3 attempts]
+        R2[exponential backoff]
+        R3[+25% jitter]
+        R4[capped at 30s]
+    end
+
+    subgraph Degradation["🛡 Graceful degradation"]
+        D1[TOC failure → fallback outline]
+        D2[References failure → empty list]
+        D3[Search failure → partial results]
+        D4[File write failure → stdout output]
+    end
+
+    subgraph Errors["⚠ Typed errors"]
+        E1[AgentError]
+        E2[TimeoutError]
+        E3[RateLimitError]
+        E4[NetworkError]
+        E5[SearchError]
+    end
+
+    Errors --> Retry
+    Retry --> Timeouts
+    Timeouts --> Degradation
+```
+
+## Agents
+
+| Agent | Model | Output | Purpose |
+|-------|-------|--------|---------|
+| Query Builder | gpt-4o-mini | string | Enhances query with web context |
+| Ambiguity Detector | gpt-4o-mini | `Ambiguity` | Classifies query across 5 ambiguity types |
+| Clarification Questions | gpt-4o-mini | `string[]` | Generates 1-6 prioritized questions |
+| Search Planner | gpt-4o-mini | `Search[]` | Creates 5 non-overlapping search queries |
+| Search Executor | gpt-4o-mini | `string` | Executes one search via Tavily |
+| Table of Contents | **gpt-4o** | `TableOfContent` | 4-8 sections with special elements |
+| Report Section | gpt-4o-mini | `string` (HTML) | Generates `<section>` HTML content |
+| References Generator | gpt-4o-mini | `Reference[]` | Extracts 1-10 references from sources |
+
+## Project structure
 
 ```
 src/
-├── agents/           # AI agent implementations
-├── modules/          # Main workflow modules
-├── tools/            # External tool integrations
-├── types/            # TypeScript type definitions
-├── templates/        # HTML report templates
-├── utils/            # Utility functions
-└── index.ts          # Main entry point
+├── agents/           # 8 OpenAI agent definitions (instructions + Zod schemas)
+├── cli/              # CLI wrappers (spinners, chalk, retry, timeouts)
+├── services/         # Pure business logic (no I/O, testable)
+├── tools/            # External integrations (Tavily web search)
+├── types/            # TypeScript interfaces
+├── utils/            # Utilities (retry, timeout, batch, config, etc.)
+├── templates/        # HTML report template
+├── errors/           # Typed error hierarchy
+├── run.ts            # Orchestration with dependency injection
+└── index.ts          # Entry point (arg parsing, config, setup)
 ```
 
-### Key Components
+## Development
 
-- **Agents**: Specialized AI agents for different research tasks
-- **Modules**: Orchestrate the research workflow
-- **Tools**: External integrations (web search, etc.)
-- **Types**: Comprehensive type definitions for type safety
-- **Templates**: HTML templates for report generation
+```bash
+npm run dev          # Run with ts-node (watch mode)
+npm run build        # Compile to dist/
+npm test             # Run 60+ unit tests (vitest)
+npm run lint         # ESLint check
+npm run lint:fix     # Auto-fix lint issues
+npm run format       # Prettier format
+```
 
-## Contributing
+## Output
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a pull request
+The generated HTML report is a self-contained file with:
+
+- Professional serif typography and academic styling
+- Clickable table of contents with section navigation
+- Structured sections with tables, lists, and paragraphs
+- Reference list with source URLs
+- Print-optimized stylesheet
+- Responsive layout
+
+The filename is automatically generated from the report title and timestamp (e.g., `ai-impact-on-jobs-2025-08-25T10-56-05.html`).
+
+## Configuration
+
+Configuration is stored at `~/.config/deep-research/config.json`:
+
+```json
+{
+  "llm": {
+    "provider": "openai",
+    "apiKey": "sk-...",
+    "baseUrl": "https://api.openai.com/v1"
+  },
+  "webSearch": {
+    "provider": "tavily",
+    "apiKey": "tvly-..."
+  }
+}
+```
+
+Environment variables (`.env` file in the project directory) are loaded first, then the config file overrides them.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contact
-
-For questions or feedback, please open an issue on the repository.
+MIT — see [LICENSE](LICENSE).
