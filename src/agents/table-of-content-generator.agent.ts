@@ -123,28 +123,38 @@ const sectionSchema = z
     summary: z.string().describe("Brief overview of what this section covers and analyzes"),
     specialElements: z
       .array(
-        z.string().describe(
-          "Specific, contextual description of data presentation element needed (e.g., 'Sales performance table showing annual units 2020-2024 by vehicle category', 'List of top 5 government policies affecting car sales in 2024')"
-        )
+        z
+          .string()
+          .describe(
+            "Specific, contextual description of data presentation element needed (e.g., 'Sales performance table showing annual units 2020-2024 by vehicle category', 'List of top 5 government policies affecting car sales in 2024')"
+          )
       )
-      .describe("Array of specific, contextual special elements (tables, lists) that will enhance this section's content presentation and avoid duplication across sections"),
+      .describe(
+        "Array of specific, contextual special elements (tables, lists) that will enhance this section's content presentation and avoid duplication across sections"
+      ),
   })
   .describe("A single section with strategically assigned special elements");
 
 const outputType = z
   .object({
     reportTitle: z.string().describe("Main title of the comprehensive report"),
-    reportSummary: z.string().describe("Concise summary of the entire report scope and key findings"),
+    reportSummary: z
+      .string()
+      .describe("Concise summary of the entire report scope and key findings"),
     tableOfContents: z
       .array(sectionSchema)
       .min(4)
       .max(8)
-      .describe("Strategically structured list of sections with specific, non-duplicative special elements assigned to optimize data presentation"),
+      .describe(
+        "Strategically structured list of sections with specific, non-duplicative special elements assigned to optimize data presentation"
+      ),
   })
-  .describe("Comprehensive report outline with strategic element placement ensuring no duplication and maximum data presentation effectiveness");
+  .describe(
+    "Comprehensive report outline with strategic element placement ensuring no duplication and maximum data presentation effectiveness"
+  );
 
 export default Agent.create({
-  name: "TableOfContentGenerator", 
+  name: "TableOfContentGenerator",
   model: "gpt-4o",
   instructions,
   outputType,

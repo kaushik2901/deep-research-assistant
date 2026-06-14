@@ -81,11 +81,10 @@ const clarificationQuestionsGeneratorAgent = Agent.create({
   outputType,
 });
 
-const clarificationQuestionsGeneratorTool =
-  clarificationQuestionsGeneratorAgent.asTool({
-    toolName: "generate_clarification_questions",
-    toolDescription: `Generates focused clarification questions to resolve query ambiguities. Takes the original user query and ambiguity analysis results, then produces prioritized questions that will help transform ambiguous queries into clear, actionable research directives. Designed to balance thoroughness with user experience by asking only the most critical questions needed for successful research execution.`,
-  });
+const clarificationQuestionsGeneratorTool = clarificationQuestionsGeneratorAgent.asTool({
+  toolName: "generate_clarification_questions",
+  toolDescription: `Generates focused clarification questions to resolve query ambiguities. Takes the original user query and ambiguity analysis results, then produces prioritized questions that will help transform ambiguous queries into clear, actionable research directives. Designed to balance thoroughness with user experience by asking only the most critical questions needed for successful research execution.`,
+});
 
 export default clarificationQuestionsGeneratorAgent;
 

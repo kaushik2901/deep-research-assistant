@@ -79,9 +79,7 @@ const outputType = z
             .describe(
               "The title or name of the referenced source, such as an article or book title"
             ),
-          url: z
-            .string()
-            .describe("A valid URL linking directly to the referenced source"),
+          url: z.string().describe("A valid URL linking directly to the referenced source"),
         })
       )
       .min(1)

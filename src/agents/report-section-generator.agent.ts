@@ -110,9 +110,15 @@ Remember: Focus on creating valuable, well-structured content that effectively c
 
 const outputType = z
   .object({
-    html: z.string().describe("Valid HTML section content wrapped in <section> tags, containing the structured content based on search results and special elements requirements"),
+    html: z
+      .string()
+      .describe(
+        "Valid HTML section content wrapped in <section> tags, containing the structured content based on search results and special elements requirements"
+      ),
   })
-  .describe("Generated HTML section with tables, lists, and paragraphs as specified in the special elements list");
+  .describe(
+    "Generated HTML section with tables, lists, and paragraphs as specified in the special elements list"
+  );
 
 export default Agent.create({
   name: "ReportSectionGenerator",

@@ -60,9 +60,7 @@ const outputType = z.object({
     ),
   criticalAmbiguities: z
     .array(z.string())
-    .describe(
-      "List of the most critical ambiguous elements that need clarification"
-    ),
+    .describe("List of the most critical ambiguous elements that need clarification"),
   confidence: z
     .number()
     .min(0)

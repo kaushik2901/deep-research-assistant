@@ -63,13 +63,23 @@ const outputType = z.object({
   searches: z
     .array(
       z.object({
-        query: z.string().describe("Optimized search query designed to find specific, high-quality information for one aspect of the research topic"),
-        reason: z.string().describe("Clear explanation of what information gap this search addresses and why this specific search is essential for comprehensive research"),
+        query: z
+          .string()
+          .describe(
+            "Optimized search query designed to find specific, high-quality information for one aspect of the research topic"
+          ),
+        reason: z
+          .string()
+          .describe(
+            "Clear explanation of what information gap this search addresses and why this specific search is essential for comprehensive research"
+          ),
       })
     )
     .min(1)
     .max(MAX_SEARCHES)
-    .describe(`Strategic array of ${MAX_SEARCHES} complementary search queries designed to gather comprehensive, diverse data covering all key aspects of the research topic without overlap`),
+    .describe(
+      `Strategic array of ${MAX_SEARCHES} complementary search queries designed to gather comprehensive, diverse data covering all key aspects of the research topic without overlap`
+    ),
 });
 
 const tools = [webSearchTool];

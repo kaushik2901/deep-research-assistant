@@ -1,4 +1,4 @@
 export default interface Reference {
-    title: string;
-    url: string;
+  title: string;
+  url: string;
 }
