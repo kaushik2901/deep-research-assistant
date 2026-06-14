@@ -1,96 +1,70 @@
 import { config } from "dotenv";
 import chalk from "chalk";
-import Context from "./types/context.type";
-import QuestionAnswer from "./types/question-answer.type";
+import logSymbols from "log-symbols";
+import { runResearch } from "./run";
 import ask from "./utils/ask.util";
-import runQueryBuilder from "./modules/query-builder.module";
-import runAmbiguityDetector from "./modules/ambiguity-detector.module";
-import askClarificationQuestions from "./modules/ask-clarification-questions.module";
 import printBanner from "./utils/print-banner.util";
 import { printGreen, printYellow } from "./utils/print.util";
-import runSearchPlanner from "./modules/search-planner.module";
-import runSearchExecutor from "./modules/search-executor.module";
 import rebuildAmbiguousQuery from "./utils/rebuild-ambiguous-query.util";
-import runTableOfContentGenerator from "./modules/table-of-content-generator.module";
-import runReferencesGenerator from "./modules/references-generator.module";
-import runReportSectionsGenerator from "./modules/report-sections-generator.module";
-import runReportGenerator from "./modules/report-generator.module";
-import logSymbols from "log-symbols";
+import askClarificationQuestions from "./modules/ask-clarification-questions.module";
+import runQueryBuilder from "./cli/query-builder.cli";
+import runAmbiguityDetector from "./cli/ambiguity-detector.cli";
+import runSearchPlanner from "./cli/search-planner.cli";
+import runSearchExecutor from "./cli/search-executor.cli";
+import runTableOfContentGenerator from "./cli/table-of-content.cli";
+import runReportSectionsGenerator from "./cli/report-sections.cli";
+import runReferencesGenerator from "./cli/references-generator.cli";
+import runReportGenerator from "./cli/report-generator.cli";
+import Search from "./types/search.type";
 
 config();
-
-const MAX_CLARIFICATION_ITERATION = 2;
 
 async function main() {
   printBanner();
 
-  const context: Context = {
-    query: "",
-    clarificationIterationCount: 0,
-    searches: [],
-    searchResults: [],
-  };
+  await runResearch({
+    ask,
+    buildQuery: runQueryBuilder,
+    detectAmbiguity: runAmbiguityDetector,
+    askClarificationQuestions,
+    rebuildAmbiguousQuery,
+    planSearches: runSearchPlanner,
+    executeSearches: runSearchExecutor,
+    generateTableOfContent: runTableOfContentGenerator,
+    generateSections: runReportSectionsGenerator,
+    generateReferences: runReferencesGenerator,
+    generateReport: runReportGenerator,
 
-  context.query = await ask("Enter your research query");
-
-  while (true) {
-    context.query = await runQueryBuilder(context.query);
-
-    const ambiguity = await runAmbiguityDetector(context.query);
-
-    if (!ambiguity.isAmbiguousQuery) {
+    onAmbiguityClear: () => {
       printGreen(`${logSymbols.success} Query is clear and unambiguous. Proceeding to research...`);
-      break;
-    }
-
-    if (context.clarificationIterationCount >= MAX_CLARIFICATION_ITERATION) {
+    },
+    onMaxIterationsReached: () => {
       printYellow(
         `${logSymbols.warning} Maximum clarification iterations reached. Proceeding with current query...`
       );
-      break;
-    }
-
-    const answers: QuestionAnswer[] = await askClarificationQuestions(ambiguity);
-
-    context.query = rebuildAmbiguousQuery(context.query, ambiguity?.ambiguityReason, answers);
-
-    context.clarificationIterationCount++;
-
-    printGreen(
-      `\n${logSymbols.success} Clarification round ${context.clarificationIterationCount} completed. Refining query...\n`
-    );
-  }
-
-  context.searches = await runSearchPlanner(context.query);
-
-  console.log(chalk.blue("\n📋 Research Strategy:"));
-  context.searches.forEach((search, index) => {
-    console.log(chalk.gray(`  ${index + 1}. ${search.query}`));
-    console.log(chalk.gray(`     Reason: ${search.reason}\n`));
+    },
+    onClarificationCompleted: (iteration) => {
+      printGreen(
+        `\n${logSymbols.success} Clarification round ${iteration} completed. Refining query...\n`
+      );
+    },
+    onSearchPlanCreated: (searches: Search[]) => {
+      console.log(chalk.blue("\n\u{1F4CB} Research Strategy:"));
+      searches.forEach((search, index) => {
+        console.log(chalk.gray(`  ${index + 1}. ${search.query}`));
+        console.log(chalk.gray(`     Reason: ${search.reason}\n`));
+      });
+    },
+    onSearchResults: (results: string[]) => {
+      console.log(chalk.blue("\n\u{1F4CA} Research Results Summary:"));
+      console.log(chalk.gray(`  Found ${results.length} distinct result sets`));
+      console.log(chalk.gray(`  Research data ready for synthesis`));
+      console.log(chalk.green(`\n${logSymbols.success} Research process completed successfully!`));
+    },
   });
-
-  context.searchResults = await runSearchExecutor(context.searches);
-
-  // Display results summary
-  console.log(chalk.blue("\n📊 Research Results Summary:"));
-  console.log(chalk.gray(`  Found ${context.searchResults.length} distinct result sets`));
-  console.log(chalk.gray(`  Research data ready for synthesis`));
-
-  console.log(chalk.green(`\n${logSymbols.success} Research process completed successfully!`));
-
-  const documentOutline = await runTableOfContentGenerator(context.searchResults);
-
-  const sections = await runReportSectionsGenerator(
-    documentOutline.tableOfContents,
-    context.searchResults
-  );
-
-  const references = await runReferencesGenerator(context.searchResults);
-
-  await runReportGenerator(documentOutline, sections, references);
 }
 
 main().catch((err) => {
-  console.error(chalk.red("❌ Error:"), err);
+  console.error(chalk.red("\u274C Error:"), err);
   process.exit(1);
 });

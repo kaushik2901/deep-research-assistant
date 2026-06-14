@@ -1,7 +1,7 @@
 import { run } from "@openai/agents";
 import chalk from "chalk";
 import ora from "ora";
-import referencesGeneratorAgent from "../agents/references-generator.agent";
+import { generateReferences } from "../services/references-generator.service";
 import Reference from "../types/reference.type";
 
 export default async function runReferencesGenerator(
@@ -13,12 +13,9 @@ export default async function runReferencesGenerator(
   }).start();
 
   try {
-    const response = await run(
-      referencesGeneratorAgent,
-      JSON.stringify(searchResults)
-    );
+    const references = await generateReferences(searchResults, { run });
     spinner.succeed(chalk.green("References generated successfully"));
-    return response.finalOutput?.references ?? [];
+    return references;
   } catch (error) {
     spinner.fail(chalk.red("Failed to generate references"));
     throw error;

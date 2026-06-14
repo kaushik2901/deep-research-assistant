@@ -1,7 +1,7 @@
 import { run } from "@openai/agents";
-import queryBuilderAgent from "../agents/query-builder.agent";
 import chalk from "chalk";
 import ora from "ora";
+import { buildQuery } from "../services/query-builder.service";
 
 export default async function runQueryBuilder(query: string): Promise<string> {
   const spinner = ora({
@@ -10,9 +10,9 @@ export default async function runQueryBuilder(query: string): Promise<string> {
   }).start();
 
   try {
-    const response = await run(queryBuilderAgent, query);
+    const result = await buildQuery(query, { run });
     spinner.succeed(chalk.green("Query built successfully"));
-    return response.finalOutput ?? "";
+    return result;
   } catch (error) {
     spinner.fail(chalk.red("Failed to build query"));
     throw error;

@@ -1,0 +1,38 @@
+import reportSectionGeneratorAgent from "../agents/report-section-generator.agent";
+import { TableOfContentSection } from "../types/table-of-content.type";
+import Section from "../types/section.type";
+import { AgentRunner } from "./agent-runner";
+
+async function generateSingleSection(
+  title: string,
+  summary: string,
+  specialElements: string[],
+  searchResults: string[],
+  runner: AgentRunner
+): Promise<string> {
+  const response = await runner.run<{ html: string }>(
+    reportSectionGeneratorAgent,
+    JSON.stringify({ title, summary, specialElements, searchResults })
+  );
+  return response.finalOutput?.html ?? "";
+}
+
+export async function generateSections(
+  tableOfContents: TableOfContentSection[],
+  searchResults: string[],
+  runner: AgentRunner
+): Promise<Section[]> {
+  const sections = await Promise.all(
+    tableOfContents.map(async ({ id, title, summary, specialElements }) => {
+      const html = await generateSingleSection(
+        title,
+        summary,
+        specialElements,
+        searchResults,
+        runner
+      );
+      return { id, title, html };
+    })
+  );
+  return sections;
+}
