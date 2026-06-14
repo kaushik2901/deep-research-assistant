@@ -25,11 +25,26 @@ export default async function runReportGenerator(
     const report = buildReportHtml(documentOutline, sections, references, template);
     const filename = buildFilename(documentOutline.reportTitle, new Date());
 
-    await withRetry(async () => fs.writeFile(filename, report), { maxRetries: 2, baseDelay: 500 });
+    await withRetry(() => fs.writeFile(filename, report), {
+      maxRetries: 2,
+      baseDelay: 500,
+    });
 
     spinner.succeed(chalk.green(`Report generated successfully: ${filename}`));
   } catch (error) {
-    spinner.fail(chalk.red("Failed to generate report"));
-    throw error;
+    spinner.fail(chalk.red("Failed to write report file"));
+
+    try {
+      const templatePath = path.resolve(__dirname, "../templates/report-template.html");
+      const template = (await fs.readFile(templatePath)).toString();
+      const report = buildReportHtml(documentOutline, sections, references, template);
+      console.log(
+        chalk.yellow("\n--- Report Output (file write failed, printing to stdout) ---\n")
+      );
+      console.log(report);
+      console.log(chalk.yellow("\n--- End of Report ---\n"));
+    } catch {
+      throw error;
+    }
   }
 }

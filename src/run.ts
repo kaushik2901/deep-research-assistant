@@ -75,14 +75,35 @@ export async function runResearch(deps: RunDeps): Promise<void> {
   context.searchResults = await deps.executeSearches(context.searches);
   deps.onSearchResults?.(context.searchResults);
 
-  const documentOutline = await deps.generateTableOfContent(context.searchResults);
+  let documentOutline: TableOfContent;
+  try {
+    documentOutline = await deps.generateTableOfContent(context.searchResults);
+  } catch {
+    documentOutline = {
+      reportTitle: "Research Report",
+      reportSummary: "A comprehensive research report generated from web search results.",
+      tableOfContents: [
+        {
+          id: "findings",
+          title: "Key Findings",
+          summary: "Research findings and analysis",
+          specialElements: [],
+        },
+      ],
+    };
+  }
 
   const sections = await deps.generateSections(
     documentOutline.tableOfContents,
     context.searchResults
   );
 
-  const references = await deps.generateReferences(context.searchResults);
+  let references: Reference[];
+  try {
+    references = await deps.generateReferences(context.searchResults);
+  } catch {
+    references = [];
+  }
 
   await deps.generateReport(documentOutline, sections, references);
 }
