@@ -2,6 +2,7 @@ import { run } from "@openai/agents";
 import chalk from "chalk";
 import ora from "ora";
 import { planSearches } from "../services/search-planner.service";
+import { withRetry } from "../utils/retry.util";
 import Search from "../types/search.type";
 
 export default async function runSearchPlanner(query: string): Promise<Search[]> {
@@ -11,7 +12,7 @@ export default async function runSearchPlanner(query: string): Promise<Search[]>
   }).start();
 
   try {
-    const searches = await planSearches(query, { run });
+    const searches = await withRetry(() => planSearches(query, { run }));
     spinner.succeed(chalk.green(`Research plan created with ${searches.length} search strategies`));
     return searches;
   } catch (error) {

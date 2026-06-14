@@ -2,6 +2,7 @@ import { run } from "@openai/agents";
 import chalk from "chalk";
 import ora from "ora";
 import { buildQuery } from "../services/query-builder.service";
+import { withRetry } from "../utils/retry.util";
 
 export default async function runQueryBuilder(query: string): Promise<string> {
   const spinner = ora({
@@ -10,7 +11,7 @@ export default async function runQueryBuilder(query: string): Promise<string> {
   }).start();
 
   try {
-    const result = await buildQuery(query, { run });
+    const result = await withRetry(() => buildQuery(query, { run }));
     spinner.succeed(chalk.green("Query built successfully"));
     return result;
   } catch (error) {

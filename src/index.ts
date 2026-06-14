@@ -1,6 +1,7 @@
 import { config } from "dotenv";
 import chalk from "chalk";
 import logSymbols from "log-symbols";
+import { ConfigurationError } from "./errors";
 import { runResearch } from "./run";
 import ask from "./utils/ask.util";
 import printBanner from "./utils/print-banner.util";
@@ -19,7 +20,17 @@ import Search from "./types/search.type";
 
 config();
 
+function validateConfig() {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new ConfigurationError("OPENAI_API_KEY environment variable is required");
+  }
+  if (!process.env.TAVILY_API_KEY) {
+    throw new ConfigurationError("TAVILY_API_KEY environment variable is required");
+  }
+}
+
 async function main() {
+  validateConfig();
   printBanner();
 
   await runResearch({

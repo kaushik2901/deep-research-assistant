@@ -10,11 +10,15 @@ async function generateSingleSection(
   searchResults: string[],
   runner: AgentRunner
 ): Promise<string> {
-  const response = await runner.run<{ html: string }>(
-    reportSectionGeneratorAgent,
-    JSON.stringify({ title, summary, specialElements, searchResults })
-  );
-  return response.finalOutput?.html ?? "";
+  try {
+    const response = await runner.run<{ html: string }>(
+      reportSectionGeneratorAgent,
+      JSON.stringify({ title, summary, specialElements, searchResults })
+    );
+    return response.finalOutput?.html ?? "";
+  } catch {
+    return "";
+  }
 }
 
 export async function generateSections(

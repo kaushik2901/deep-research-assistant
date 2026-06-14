@@ -2,6 +2,7 @@ import { run } from "@openai/agents";
 import chalk from "chalk";
 import ora from "ora";
 import { executeSearches } from "../services/search-executor.service";
+import { withRetry } from "../utils/retry.util";
 import Search from "../types/search.type";
 
 export default async function runSearchExecutor(searches: Search[]): Promise<string[]> {
@@ -11,7 +12,7 @@ export default async function runSearchExecutor(searches: Search[]): Promise<str
   }).start();
 
   try {
-    const searchResults = await executeSearches(searches, { run });
+    const searchResults = await withRetry(() => executeSearches(searches, { run }));
     spinner.succeed(
       chalk.green(`Search execution completed. Retrieved ${searchResults.length} result sets`)
     );

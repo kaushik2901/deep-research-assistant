@@ -2,6 +2,7 @@ import { run } from "@openai/agents";
 import chalk from "chalk";
 import ora from "ora";
 import { generateReferences } from "../services/references-generator.service";
+import { withRetry } from "../utils/retry.util";
 import Reference from "../types/reference.type";
 
 export default async function runReferencesGenerator(
@@ -13,7 +14,7 @@ export default async function runReferencesGenerator(
   }).start();
 
   try {
-    const references = await generateReferences(searchResults, { run });
+    const references = await withRetry(() => generateReferences(searchResults, { run }));
     spinner.succeed(chalk.green("References generated successfully"));
     return references;
   } catch (error) {
