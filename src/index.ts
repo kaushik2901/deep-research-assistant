@@ -36,41 +36,29 @@ async function main() {
   while (true) {
     context.query = await runQueryBuilder(context.query);
 
-    try {
-      const ambiguity = await runAmbiguityDetector(context.query);
+    const ambiguity = await runAmbiguityDetector(context.query);
 
-      if (!ambiguity.isAmbiguousQuery) {
-        printGreen(
-          `${logSymbols.success} Query is clear and unambiguous. Proceeding to research...`
-        );
-        break;
-      }
-
-      if (context.clarificationIterationCount >= MAX_CLARIFICATION_ITERATION) {
-        printYellow(
-          `${logSymbols.warning} Maximum clarification iterations reached. Proceeding with current query...`
-        );
-        break;
-      }
-
-      const answers: QuestionAnswer[] = await askClarificationQuestions(
-        ambiguity
-      );
-
-      context.query = rebuildAmbiguousQuery(
-        context.query,
-        ambiguity?.ambiguityReason,
-        answers
-      );
-
-      context.clarificationIterationCount++;
-
-      printGreen(
-        `\n${logSymbols.success} Clarification round ${context.clarificationIterationCount} completed. Refining query...\n`
-      );
-    } catch (error) {
-      throw error;
+    if (!ambiguity.isAmbiguousQuery) {
+      printGreen(`${logSymbols.success} Query is clear and unambiguous. Proceeding to research...`);
+      break;
     }
+
+    if (context.clarificationIterationCount >= MAX_CLARIFICATION_ITERATION) {
+      printYellow(
+        `${logSymbols.warning} Maximum clarification iterations reached. Proceeding with current query...`
+      );
+      break;
+    }
+
+    const answers: QuestionAnswer[] = await askClarificationQuestions(ambiguity);
+
+    context.query = rebuildAmbiguousQuery(context.query, ambiguity?.ambiguityReason, answers);
+
+    context.clarificationIterationCount++;
+
+    printGreen(
+      `\n${logSymbols.success} Clarification round ${context.clarificationIterationCount} completed. Refining query...\n`
+    );
   }
 
   context.searches = await runSearchPlanner(context.query);
@@ -85,20 +73,12 @@ async function main() {
 
   // Display results summary
   console.log(chalk.blue("\n📊 Research Results Summary:"));
-  console.log(
-    chalk.gray(`  Found ${context.searchResults.length} distinct result sets`)
-  );
+  console.log(chalk.gray(`  Found ${context.searchResults.length} distinct result sets`));
   console.log(chalk.gray(`  Research data ready for synthesis`));
 
-  console.log(
-    chalk.green(
-      `\n${logSymbols.success} Research process completed successfully!`
-    )
-  );
+  console.log(chalk.green(`\n${logSymbols.success} Research process completed successfully!`));
 
-  const documentOutline = await runTableOfContentGenerator(
-    context.searchResults
-  );
+  const documentOutline = await runTableOfContentGenerator(context.searchResults);
 
   const sections = await runReportSectionsGenerator(
     documentOutline.tableOfContents,

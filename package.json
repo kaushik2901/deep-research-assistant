@@ -11,13 +11,13 @@
     "query-processing",
     "information-retrieval"
   ],
-      "homepage": "https://github.com/kaushik2901/deep-research-assistant#readme",
+  "homepage": "https://github.com/kaushik2901/deep-research-assistant#readme",
   "bugs": {
-          "url": "https://github.com/kaushik2901/deep-research-assistant/issues"
+    "url": "https://github.com/kaushik2901/deep-research-assistant/issues"
   },
   "repository": {
     "type": "git",
-          "url": "https://github.com/kaushik2901/deep-research-assistant.git"
+    "url": "https://github.com/kaushik2901/deep-research-assistant.git"
   },
   "license": "MIT",
   "author": "Your Name <your.email@example.com>",
@@ -31,7 +31,11 @@
     "build": "tsc",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
-    "postbuild": "echo Build completed successfully"
+    "postbuild": "echo Build completed successfully",
+    "lint": "eslint src/ --ext .ts",
+    "lint:fix": "eslint src/ --ext .ts --fix",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/"
   },
   "dependencies": {
     "@openai/agents": "^0.0.7",
@@ -44,8 +48,15 @@
     "zod": "^3.25.64"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/inquirer": "^9.0.9",
     "@types/node": "^24.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.61.0",
+    "@typescript-eslint/parser": "^8.61.0",
+    "eslint": "^10.5.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "prettier": "^3.8.4",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"

@@ -22,7 +22,7 @@ async function runReportSectionGenerator(
       })
     );
     return response.finalOutput?.html ?? "";
-  } catch (error) {
+  } catch {
     return "";
   }
 }
