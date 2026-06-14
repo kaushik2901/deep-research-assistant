@@ -1,7 +1,9 @@
-import { config } from "dotenv";
+import { config as dotenvConfig } from "dotenv";
 import chalk from "chalk";
 import logSymbols from "log-symbols";
 import { ConfigurationError } from "./errors";
+import { parseArgs, printHelp, printVersion } from "./utils/args.util";
+import { loadConfig, applyConfig } from "./utils/config.util";
 import { runResearch } from "./run";
 import ask from "./utils/ask.util";
 import printBanner from "./utils/print-banner.util";
@@ -16,21 +18,49 @@ import runTableOfContentGenerator from "./cli/table-of-content.cli";
 import runReportSectionsGenerator from "./cli/report-sections.cli";
 import runReferencesGenerator from "./cli/references-generator.cli";
 import runReportGenerator from "./cli/report-generator.cli";
+import { runSetup } from "./cli/setup";
 import Search from "./types/search.type";
 
-config();
+dotenvConfig();
 
-function validateConfig() {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new ConfigurationError("OPENAI_API_KEY environment variable is required");
-  }
-  if (!process.env.TAVILY_API_KEY) {
-    throw new ConfigurationError("TAVILY_API_KEY environment variable is required");
-  }
+const args = parseArgs(process.argv);
+
+if (args.help) {
+  printHelp();
+  process.exit(0);
+}
+
+if (args.version) {
+  printVersion();
+  process.exit(0);
 }
 
 async function main() {
-  validateConfig();
+  const config = await loadConfig();
+
+  if (!config || args.setup) {
+    const newConfig = await runSetup(config ?? undefined);
+    applyConfig(newConfig);
+
+    if (args.setup) {
+      console.log(chalk.green("Setup complete! Run `deep-research` to start researching.\n"));
+      return;
+    }
+  } else {
+    applyConfig(config);
+  }
+
+  if (!process.env.OPENAI_API_KEY) {
+    throw new ConfigurationError(
+      "OPENAI_API_KEY is not configured. Run `deep-research --setup` to configure."
+    );
+  }
+  if (!process.env.TAVILY_API_KEY) {
+    throw new ConfigurationError(
+      "TAVILY_API_KEY is not configured. Run `deep-research --setup` to configure."
+    );
+  }
+
   printBanner();
 
   await runResearch({
