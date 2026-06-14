@@ -6,22 +6,9 @@ An intelligent research assistant with ambiguity detection and clarification cap
 
 The Deep Research Assistant is an advanced AI-powered tool that transforms vague or ambiguous research queries into comprehensive, well-structured research reports. It uses multiple specialized agents working in coordination to ensure high-quality research output while maintaining an intuitive user experience. The agent not only conducts research but also synthesizes findings into professional HTML reports with proper structure, references, and formatting.
 
-## Current Status ✅
+## Status
 
-**Fully Implemented Features:**
-- Complete multi-agent research workflow
-- Ambiguity detection and resolution system
-- Web search integration via Tavily API
-- Strategic search planning and execution
-- Professional HTML report generation
-- Interactive CLI interface
-- TypeScript implementation with full type safety
-
-**Ready for Production Use:**
-- All core functionality implemented and tested
-- Professional report output with proper formatting
-- Comprehensive error handling and user feedback
-- Modular architecture for easy maintenance and extension
+Core multi-agent research workflow is implemented with ambiguity detection, web search integration, and HTML report generation. The project is in active development toward production readiness.
 
 ## Key Features
 
