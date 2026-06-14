@@ -1,6 +1,7 @@
 import { tool } from "@openai/agents";
 import { tavily } from "@tavily/core";
 import { z } from "zod";
+import { SearchError, RateLimitError, NetworkError, TimeoutError } from "../errors";
 import { withTimeout } from "../utils/timeout.util";
 
 const TAVILY_TIMEOUT = 30_000;
@@ -17,18 +18,49 @@ const webSearchTool = tool({
       ),
   }),
   async execute({ searchQuery }) {
-    const result = await withTimeout(
-      async () => {
-        const client = tavily({
-          apiKey: process.env.TAVILY_API_KEY,
-        });
-        return await client.search(searchQuery);
-      },
-      TAVILY_TIMEOUT,
-      "Tavily search"
-    );
+    try {
+      return await withTimeout(
+        async () => {
+          const client = tavily({
+            apiKey: process.env.TAVILY_API_KEY,
+          });
+          return await client.search(searchQuery);
+        },
+        TAVILY_TIMEOUT,
+        "Tavily search"
+      );
+    } catch (error) {
+      if (
+        error instanceof RateLimitError ||
+        error instanceof SearchError ||
+        error instanceof NetworkError ||
+        error instanceof TimeoutError
+      ) {
+        throw error;
+      }
 
-    return result;
+      if (error instanceof Error) {
+        const msg = error.message.toLowerCase();
+        if (
+          msg.includes("rate limit") ||
+          msg.includes("429") ||
+          msg.includes("too many requests")
+        ) {
+          throw new RateLimitError("Tavily rate limit exceeded");
+        }
+        if (
+          msg.includes("econnrefused") ||
+          msg.includes("econnreset") ||
+          msg.includes("enotfound") ||
+          msg.includes("etimedout") ||
+          msg.includes("socket hang up")
+        ) {
+          throw new NetworkError(`Tavily network error: ${error.message}`, error);
+        }
+      }
+
+      throw new SearchError(error instanceof Error ? error.message : "Tavily search failed");
+    }
   },
 });
 
