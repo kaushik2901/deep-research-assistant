@@ -5,9 +5,9 @@ export async function withTimeout<T>(
   timeoutMs: number,
   label?: string
 ): Promise<T> {
+  let timerId: ReturnType<typeof setTimeout> | undefined;
   const timer = new Promise<never>((_, reject) => {
-    const id = setTimeout(() => {
-      clearTimeout(id);
+    timerId = setTimeout(() => {
       reject(
         new TimeoutError(
           label
@@ -19,5 +19,9 @@ export async function withTimeout<T>(
     }, timeoutMs);
   });
 
-  return await Promise.race([fn(), timer]);
+  try {
+    return await Promise.race([fn(), timer]);
+  } finally {
+    clearTimeout(timerId);
+  }
 }
